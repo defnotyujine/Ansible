@@ -1,0 +1,22 @@
+---
+
+- name: Display Banner and Run Preliminary Checks
+  hosts: windows
+  gather_facts: no
+  tasks:
+
+    - name: Gather Windows facts
+      ansible.builtin.setup:
+        gather_subset: all
+
+    - name: Display Banner
+      command: cat /home/vvolf/Ansible/Windows-Automation/Windows10-Pro/templates/banner.txt
+      register: banner_output
+      delegate_to: localhost
+
+    - name: Print Banner Output
+      debug:
+        msg: "{{ banner_output.stdout_lines }}"
+
+    - name: Include Preliminary Checks
+      include_tasks: ~/Ansible/Windows-Automation/Windows10-Pro/prelims/prelims.yml

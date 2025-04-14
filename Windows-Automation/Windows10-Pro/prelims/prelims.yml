@@ -1,0 +1,77 @@
+---
+
+- name: Gather Windows facts
+  ansible.builtin.setup:
+    gather_subset: all
+
+- name: Check Windows version name
+  win_shell: (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion").ProductName
+  register: win_version
+
+- name: Fail if not Windows 10 Pro
+  fail:
+    msg: "Target device is not running Windows 10 Pro! Detected: {{ win_version.stdout }}"
+  when: "'Windows 10 Pro' not in win_version.stdout"
+
+- name: Print Windows version
+  debug:
+    msg: "OS Verified: {{ win_version.stdout }}"
+
+- name: Get hostname via Powershell
+  win_shell: "$env:COMPUTERNAME"
+  register: hostname_result
+
+- name: Print hostname
+  debug:
+    msg: "Hostname: {{ hostname_result.stdout }}"
+
+- name: Ensure WinRM is running
+  win_service:
+    name: WinRM
+    start_mode: auto
+    state: started
+
+- name: Get system architecture
+  win_shell: echo $ENV:PROCESSOR_ARCHITECTURE
+  register: arch
+
+- name: Print architecture
+  debug:
+    msg: "Architecture: {{ arch.stdout }}"
+
+- name: Get free disk space on C:\
+  win_shell: "(Get-PSDrive -Name C).Free"
+  register: disk_space_raw
+
+- name: Convert disk space to GB (force float)
+  set_fact:
+    free_disk_gb: "{{ ((disk_space_raw.stdout | float) / (1024 ** 3)) | float }}"
+
+- name: Debug Print type of free_disk_gb
+  debug:
+    msg: "free_disk_gb is {{ free_disk_gb }} and type is {{ free_disk_gb | type_debug }}"
+
+- name: Fail if disk space is less than 5 GB
+  fail:
+    msg: "Not enough disk space. At least 5 GB is required. Only {{ free_disk_gb | float | round(2) }} GB available."
+  when: free_disk_gb | float < 5
+
+- name: Print available disk space
+  debug:
+    msg: "Free Disk Space: {{ free_disk_gb | float | round(2) }} GB"
+
+- name: Get system time
+  win_command: powershell -Command "Get-Date"
+  register: time_now
+
+- name: Print system time
+  debug:
+    msg: "System Time: {{ time_now.stdout }}"
+
+- name: Check PowerShell execution policy
+  win_command: powershell -Command "Get-ExecutionPolicy"
+  register: ps_policy
+
+- name: Print PowerShell execution policy
+  debug:
+    msg: "Execution Policy: {{ ps_policy.stdout }}"

@@ -1,0 +1,65 @@
+- name: Run Notepad++ installer
+  win_package:
+    path: C:\temp\npp.8.7.9.Installer.x64.exe
+    state: present
+    arguments: /S
+    
+- name: Extract Zabbix Agent archive to target
+  win_unzip:
+    src: C:\temp\zabbix_agent-7.2.5-windows-amd64-openssl.zip
+    dest: C:\Program Files\Zabbix Agent\
+
+# - name: Copy Zabbix Agent configuration file
+#   win_copy:
+#     src: /path/to/zabbix_agentd.conf 
+#     dest: C:\Program Files\Zabbix Agent\conf\zabbix_agentd.conf
+
+# - name: Start Zabbix Agent service
+#   win_shell: |
+#       Start-Process -FilePath "C:\Program Files\Zabbix Agent\bin\win64\zabbix_agentd.exe" -ArgumentList "--config C:\Program Files\Zabbix Agent\conf\zabbix_agentd.conf"
+#   register: zabbix_start
+#   ignore_errors: true
+
+# - name: Error when Zabbix agent fails to start.
+#   debug:
+#     msg: "{{ zabbix_start }}"
+#   when: zabbix_start.rc != 0
+
+- name: Run Wireshark installer
+  win_package:
+    path: C:\temp\Wireshark-4.4.5-x64.exe
+    state: present
+    arguments: /S
+
+- name: Extract WinSCP portable ZIP
+  win_unzip:
+    src: C:\temp\WinSCP-6.5-Portable.zip
+    dest: C:\Program Files\WinSCP\
+
+- name: Create WinSCP shortcut
+  win_shell: |
+    $Shell = New-Object -ComObject WScript.Shell
+    $Shortcut = $Shell.CreateShortcut("C:\Users\Public\Desktop\WinSCP.lnk")
+    $Shortcut.TargetPath = "C:\Program Files\WinSCP\WinSCP.exe"
+    $Shortcut.Save()
+  ignore_errors: true
+
+- name: Remove Notepad++ installer
+  win_file:
+    path: C:\temp\npp.8.7.9.Installer.x64.exe
+    state: absent
+
+- name: Remove Zabbix-Agent installer
+  win_file:
+    path: C:\temp\zabbix_agent-7.2.5-windows-amd64-openssl.zip
+    state: absent
+
+- name: Remove Wireshark installer
+  win_file:
+    path: C:\temp\Wireshark-4.4.5-x64.exe
+    state: absent
+
+- name: Remove WinSCP installer
+  win_file:
+    path: C:\temp\WinSCP-6.5-Portable.zip
+    state: absent
