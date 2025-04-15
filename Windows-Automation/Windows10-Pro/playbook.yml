@@ -1,6 +1,6 @@
 ---
 
-- name: MAIN PLAYBOOK RUNNING
+- name: Run Main Playbook!
   hosts: windows
   gather_facts: yes
   tasks:
