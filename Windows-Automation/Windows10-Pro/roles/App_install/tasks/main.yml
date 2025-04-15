@@ -1,10 +1,7 @@
 ---
-- name: Install Applications
-  hosts: windows
-  gather_facts: no
-  tasks:
-    - name: Include copy tasks
-      include_tasks: copy.yml
 
-    - name: Include execute tasks
-      include_tasks: execute.yml
+- name: Include copy tasks
+  include_tasks: copy.yml
+
+- name: Include execute tasks
+  include_tasks: execute.yml

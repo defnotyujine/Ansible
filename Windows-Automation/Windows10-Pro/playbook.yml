@@ -1,8 +1,8 @@
 ---
 
-- name: Display Banner and Run Preliminary Checks
+- name: MAIN PLAYBOOK RUNNING
   hosts: windows
-  gather_facts: no
+  gather_facts: yes
   tasks:
 
     - name: Gather Windows facts
@@ -20,3 +20,6 @@
 
     - name: Include Preliminary Checks
       include_tasks: ~/Ansible/Windows-Automation/Windows10-Pro/prelims/prelims.yml
+
+    - name: Include Application Installation
+      include_tasks: ~/Ansible/Windows-Automation/Windows10-Pro/roles/App_install/tasks/main.yml
