@@ -10,7 +10,7 @@
         gather_subset: all
 
     - name: Display Banner
-      command: cat /home/vvolf/Ansible/Windows-Automation/Windows10-Pro/templates/banner.txt
+      command: cat /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/templates/banner.txt
       register: banner_output
       delegate_to: localhost
 
@@ -19,7 +19,7 @@
         msg: "{{ banner_output.stdout_lines }}"
 
     - name: Include Preliminary Checks
-      include_tasks: ~/Ansible/Windows-Automation/Windows10-Pro/prelims/prelims.yml
+      include_tasks: ~/Ansible/Windows-Automation/Windows-10and11-Desktop/prelims/win11-prelims.yml
 
     - name: Include Application Installation
-      include_tasks: ~/Ansible/Windows-Automation/Windows10-Pro/roles/App_install/tasks/main.yml
+      include_tasks: ~/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/tasks/main.yml
