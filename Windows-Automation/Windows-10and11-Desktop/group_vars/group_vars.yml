@@ -1,0 +1,8 @@
+# ---
+
+# banner_file: /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/templates/banner.txt
+# win10_prelims_file: /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/prelims/win10-prelims.yml
+# win11_prelims_file: /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/prelims/win11-prelims.yml
+# win10_hardening_file: /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/Windows10-Hardening/site.yml
+# win11_hardening_file: /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/Windows11-Hardening/site.yml
+# app_install_file: /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/tasks/main.yml

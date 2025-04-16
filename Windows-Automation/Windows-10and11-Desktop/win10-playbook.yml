@@ -1,6 +1,6 @@
 ---
 
-- name: Run Main Playbook!
+- name: Run Preliminary checks and Application Installation
   hosts: windows
   gather_facts: yes
   tasks:
@@ -23,3 +23,9 @@
 
     - name: Include Application Installation
       include_tasks: ~/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/tasks/main.yml
+
+- name: Include Windows 10 Hardening
+  hosts: windows
+  gather_facts: false
+  roles:
+    - role: ~/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/Windows10-Hardening
