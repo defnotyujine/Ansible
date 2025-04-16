@@ -1,0 +1,10 @@
+[windows]
+192.168.8.46
+
+[windows:vars]
+ansible_user=win11
+ansible_password=!frqAdmin
+ansible_connection=winrm
+ansible_port=5986
+ansible_winrm_transport=basic
+ansible_winrm_server_cert_validation=ignore
