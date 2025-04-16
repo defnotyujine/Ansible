@@ -9,8 +9,8 @@
 
 - name: Fail if not Windows 11 Pro
   fail:
-    msg: "Target device is not running Windows 11 Pro! Detected: {{ win_version.stdout }}"
-  when: "'Windows 11 Pro' not in win_version.stdout"
+    msg: "Target is not Windows 11 Pro! Detected: {{ ansible_facts['os_name'] }}"
+  when: "'11' not in ansible_facts['os_name']"
 
 - name: Print Windows version
   debug:
