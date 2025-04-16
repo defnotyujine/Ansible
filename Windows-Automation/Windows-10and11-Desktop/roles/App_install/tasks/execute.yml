@@ -44,6 +44,12 @@
     $Shortcut.Save()
   ignore_errors: true
 
+- name: Run Google Chrome installer
+  win_package:
+    path: C:\temp\chrome_installer.exe
+    state: present
+    arguments: /S
+
 - name: Remove Notepad++ installer
   win_file:
     path: C:\temp\npp.8.7.9.Installer.x64.exe
@@ -62,4 +68,9 @@
 - name: Remove WinSCP installer
   win_file:
     path: C:\temp\WinSCP-6.5-Portable.zip
+    state: absent
+
+- name: Remove Google Chrome installer
+  win_file:
+    path: C:\temp\chrome_installer.exe
     state: absent

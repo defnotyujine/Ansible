@@ -22,3 +22,8 @@
   win_copy:
     src: /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/files/WinSCP-6.5-Portable.zip
     dest: C:\temp\WinSCP-6.5-Portable.zip
+
+- name: Copy Google Chrome installer to target
+  win_copy:
+    src: /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/files/chrome_installer.exe
+    dest: C:\temp\chrome_installer.exe

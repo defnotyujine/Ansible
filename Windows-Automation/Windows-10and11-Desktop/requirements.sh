@@ -14,6 +14,11 @@ if [ ! -f /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/A
 fi
 
 # WinSCP
-if [ ! -f /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/files/WinSCP-6.5-POrtable.zip ]; then
+if [ ! -f /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/files/WinSCP-6.5-Portable.zip ]; then
   wget -P /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/files https://winscp.net/download/WinSCP-6.5-Portable.zip/download -O /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/files/WinSCP-6.5-Portable.zip
+fi
+
+# Google Chrome
+if [ ! -f /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/files/chrome_installer.exe ]; then
+  wget -P /home/vvolf/Ansible/Windows-Automation/Windows-10and11-Desktop/roles/App_install/files https://dl.google.com/chrome/install/latest/chrome_installer.exe
 fi
