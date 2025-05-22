@@ -1,0 +1,74 @@
+#ADDS-DNS
+dns_domain_name: "int.defnotyujin.com"
+domain_safe_mode_password: "!defnotyujine"
+domain_netbios_name: "YUJ"
+domain_admin_user: "Administrator"
+domain_admin_password: "!defnotyujine"
+domain_dn: "DC=int,DC=defnotyujine,DC=com"
+
+#Reverse Lookup Zones
+reverse_zones:
+  - network_id: "192.168.1.0/24"
+    zone_name: "1.168.192.in-addr.arpa"
+  - network_id: "10.0.0.0/8"
+    zone_name: "10.in-addr.arpa"
+  - network_id: "172.168.10.0/24"
+    zone_name: "10.168.172.in-addr.arpa"
+
+#Temp Directory
+temp_directory: "C:\\Temp"
+
+#OU Structure
+base_ou_path: "DC=int,DC=defnotyujine,DC=com"
+ou_structure:
+  - name: "_ManagedServices"
+    path: "{{ base_ou_path }}"
+  - name: "Tier0"
+    path: "OU=_ManagedServices, {{ base_ou_path }}"
+  - name: "Tier1"
+    path: "OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "_CentralServices"
+    path: "OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "Accounts"
+    path: "OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "Administrator Accounts"
+    path: "OU=Accounts,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "User Accounts"
+    path: "OU=Accounts,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "Roles"
+    path: "OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "Administrator"
+    path: "OU=Roles,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "User"
+    path: "OU=Roles,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "Security Groups"
+    path: "OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "_global-groups"
+    path: "OU=Security Groups,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "rdp-groups"
+    path: "OU=Security Groups,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "windows-admin-groups"
+    path: "OU=Security Groups,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "Service Accounts"
+    path: "OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+  - name: "Tier 1 Servers"
+    path: "OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+
+
+#User Creation
+users:
+  - name: "admin"
+    user_logon_name: "admin"
+    ou: "OU=Administrator Accounts,OU=Accounts,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+    groups:
+      - "Domain Admins"
+      - "Enterprise Admins"
+      - "Group Policy Creator Owners"
+    password: "!defnotyujine"
+  
+  - name: "user"
+    user_logon_name: "user"
+    ou: "OU=User Accounts,OU=Accounts,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
+    groups:
+      - "Remote Desktop Users"
+    password: "!defnotyujine"

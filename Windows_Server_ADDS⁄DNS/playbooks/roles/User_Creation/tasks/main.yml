@@ -1,0 +1,24 @@
+---
+- name: Create users in their respective OUs
+  microsoft.ad.user:
+    name: "{{ item.name }}"
+    upn: "{{ item.user_logon_name}}@{{ dns_domain_name }}"
+    password: "{{ item.password}}"
+    path: "{{ item.ou }}"
+    state: present
+    enabled: yes
+    password_never_expires: yes
+  loop: "{{ users }}"
+  
+- name: Add users to their domain groups assigned
+  ansible.windows.win_shell: |
+    Add-ADGroupMember -Identity "{{ item.1 }}" -Members "{{ item.0.name }}"
+  loop: "{{ users | subelements('groups') }}"
+
+
+
+
+
+
+
+

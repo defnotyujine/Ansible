@@ -1,0 +1,25 @@
+---
+- name: Run Ansible Roles on Target
+  hosts: windows
+  gather_facts: false
+  become: true
+  become_method: runas
+  become_user: Administrator
+  vars_files:
+    - group_vars/group_vars.yml
+  tasks:
+    - name: Install AD-Domain-Services and DNS roles
+      include_role:
+        name: ADDS_DNS_setup
+    
+    - name: Create AD OU structure for _ManagedServices
+      include_role:
+        name: OU_structure
+
+    - name: Create users in their respective OUs
+      include_role:
+        name: User_Creation
+    
+    - name: Apply GPO Policy Settings
+      include_role:
+        name: Group_Policy

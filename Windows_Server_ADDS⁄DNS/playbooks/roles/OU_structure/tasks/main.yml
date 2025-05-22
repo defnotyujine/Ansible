@@ -1,0 +1,7 @@
+---
+- name: Create Organizational Units based on vars
+  microsoft.ad.ou:
+    name: "{{ item.name }}"
+    path: "{{ item.path }}"
+    state: present
+  loop: "{{ ou_structure }}"
