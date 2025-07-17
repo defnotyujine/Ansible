@@ -1,0 +1,46 @@
+- name: Install ClamAV packages
+  ansible.builtin.dnf:
+    name:
+      - clamav
+      - clamav-update
+      - clamav-scanner-systemd
+    state: present
+
+- name: Copy updated freshclam config
+  ansible.builtin.template:
+    src: freshclam.conf.j2
+    dest: /etc/freshclam.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart freshclam
+
+- name: Update virus database
+  ansible.builtin.command: freshclam
+  register: freshclam_result
+  changed_when: "'bytecode.cvd' in freshclam_result.stdout"
+
+- name: Enable and start freshclam service
+  ansible.builtin.service:
+    name: clamav-freshclam
+    enabled: yes
+    state: started
+
+- name: Enable and start clamd service
+  ansible.builtin.service:
+    name: clamd@scan
+    enabled: yes
+    state: started
+
+- name: Restart freshclam service
+  ansible.builtin.service:
+    name: clamav-freshclam
+    state: restarted
+
+- name: Schedule daily scan at 2AM
+  ansible.builtin.cron:
+    name: "ClamAV Daily Scan"
+    user: root
+    minute: "0"
+    hour: "2"
+    job: "/usr/bin/clamscan -r /home --infected --log=/var/log/clamav-scan.log"

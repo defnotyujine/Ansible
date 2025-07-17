@@ -1,0 +1,11 @@
+firewalld_remove_ports:
+  - { port: 80, protocol: tcp }
+  - { port: 443, protocol: tcp }
+  - { port: 10050, protocol: tcp }
+  - { port: 10051, protocol: tcp }
+
+firewalld_remove_services:
+  - ssh
+  - http
+  - ftp
+  - samba

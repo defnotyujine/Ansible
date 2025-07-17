@@ -1,0 +1,22 @@
+---
+- name: Update all packages
+  ansible.builtin.dnf:
+    name: '*'
+    state: latest
+    update_cache: yes
+
+- name: Ensure required system packages are installed
+  ansible.builtin.dnf:
+    name: 
+      - dnf
+      - epel-release
+      - curl
+      - wget
+      - nano
+    state: present
+
+- name: Autoremove unused packages
+  ansible.builtin.command: dnf autoremove -y
+
+- name: Clean DNF cache
+  ansible.builtin.command: dnf clean all

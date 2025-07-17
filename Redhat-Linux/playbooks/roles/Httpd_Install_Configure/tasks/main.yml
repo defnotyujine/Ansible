@@ -1,0 +1,29 @@
+---
+- name: Install Apache (httpd)
+  dnf:
+    name: httpd
+    state: present
+
+- name: Ensure httpd is enabled and running 
+  systemd:
+    name: httpd
+    enabled: yes
+    state: started
+
+- name: Copy web server files to /var/www/html
+  copy:
+    src: SambaWeb/
+    dest: /var/www/html/
+    owner: apache
+    group: apache 
+    mode: '0644'
+
+- name: Allow HTTP services throught the firewall permanently
+  firewalld:
+    service: http
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Allow Apache to serve content under SELinux
+  command: setsebool -P httpd_read_user_content 1

@@ -1,0 +1,14 @@
+- name: Ensure SELinux management tools are installed
+  ansible.builtin.dnf:
+    name: policycoreutils-python-utils
+    state: present
+
+- name: Ensure SELinux is installed
+  ansible.builtin.dnf:
+    name: selinux-policy-targeted
+    state: present
+
+- name: Set SELinux mode
+  ansible.posix,selinux:
+    policy: {{ selinux_policy }}
+    state: "{{ selinux_mode }}"

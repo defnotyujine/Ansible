@@ -1,0 +1,109 @@
+---
+- name: Ensure Samba and dependencies are installed
+  dnf:
+    name: 
+      - samba
+      - samba-client
+      - samba-common
+
+- name: Ensure SMB service is running and enabled
+  systemd:
+    name: smb
+    state: started
+    enabled: yes
+
+- name: Ensure NMB service is enabled and running
+  systemd:
+    name: nmb
+    state: started
+    enabled: yes
+
+- name: Allow Samba through the firewall
+  firewalld:
+    service: samba
+    permanent: yes
+    state: enabled
+
+- name: Reload Firewalld
+  systemd:
+    name: firewalld
+    state: reloaded
+
+- name: Create Samba system user if it does not exist
+  user:
+    name: "{{ samba_user }}"
+    state: present
+
+- name: Set Samba password for the user 
+  command: smbpasswd -a {{ samba_user }}
+  args:
+    stdin: "{{ samba_password }}\n{{ samba_password }}"
+  ignore_errors: true
+
+- name: Enable the Samba user
+  command: smbpasswd -e {{ samba_user }}
+  ignore_errors: true
+
+- name: Create the sambashare group if it does not exist
+  group:
+    name: "{{ samba_group_name }}"
+    state: present
+
+- name: Create Samba share directory
+  file:
+    path: "{{ samba_share_directory }}"
+    state: directory
+    mode: '0777'
+    owner: root
+    group: sambashare
+  
+- name: Add Samba user to the sambashare group
+  user:
+    name: "{{ samba_user }}"
+    group: "{{ samba_group_name }}"
+    groups: "{{ samba_group_name}}"
+    append: yes
+
+- name: Ensure Samba configuration file exists
+  file: 
+    path: /etc/samba/smb.conf
+    state: touch
+
+- name: Configure Samba share
+  lineinfile:
+    path: /etc/samba/smb.conf
+    insertafter: EOF
+    line: |
+      [Share]
+      path: {{ samba_share_directory }}
+      writable = yes
+      browseable = yes
+      valid_users = {{ samba_user }}
+      create mask = 0777
+      directory mask = 0777
+
+- name: Restart Samba services SMB and NMB
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+  loop:
+    - smb
+    - nmb
+
+- name: Install policycoreutils-python-utils for SELinux management
+  dnf:
+    name: policycoreutils-python-utils
+    state: present
+
+- name: Add SELinux context for Samba share directory
+  command: semanage fcontext -a -t samba_share_t "{{ samba_share_directory }}(/.*)?"
+
+- name: Apply SELinux context to the Samba share directory
+  command: restorecon -Rv "{{ samba_share_directory }}"
+
+- name: Set SELinux to allow Samba access permanently
+  command: setsebool -P samba_export_all_rw on
+
+- name: Re-enable SELinux enforcement
+  command: setenforce 1
+
