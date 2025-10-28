@@ -1,10 +1,10 @@
 #ADDS-DNS
-dns_domain_name: "int.defnotyujin.com"
-domain_safe_mode_password: "!defnotyujine"
-domain_netbios_name: "YUJ"
+dns_domain_name: "int.frequentis.com"
+domain_safe_mode_password: "!frqAdmin"
+domain_netbios_name: "FRQ"
 domain_admin_user: "Administrator"
-domain_admin_password: "!defnotyujine"
-domain_dn: "DC=int,DC=defnotyujine,DC=com"
+domain_admin_password: "!frqAdmin"
+domain_dn: "DC=int,DC=frequentis,DC=com"
 
 #Reverse Lookup Zones
 reverse_zones:
@@ -19,7 +19,7 @@ reverse_zones:
 temp_directory: "C:\\Temp"
 
 #OU Structure
-base_ou_path: "DC=int,DC=defnotyujine,DC=com"
+base_ou_path: "DC=int,DC=frequentis,DC=com"
 ou_structure:
   - name: "_ManagedServices"
     path: "{{ base_ou_path }}"
@@ -57,18 +57,18 @@ ou_structure:
 
 #User Creation
 users:
-  - name: "admin"
-    user_logon_name: "admin"
+  - name: "frqadmin"
+    user_logon_name: "frqadmin"
     ou: "OU=Administrator Accounts,OU=Accounts,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
     groups:
       - "Domain Admins"
       - "Enterprise Admins"
       - "Group Policy Creator Owners"
-    password: "!defnotyujine"
+    password: "!frqAIRNAV"
   
-  - name: "user"
+  - name: "frquser"
     user_logon_name: "user"
     ou: "OU=User Accounts,OU=Accounts,OU=_CentralServices,OU=Tier1,OU=_ManagedServices,{{ base_ou_path }}"
     groups:
       - "Remote Desktop Users"
-    password: "!defnotyujine"
+    password: "!frqAIRNAV"

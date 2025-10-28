@@ -1,0 +1,4 @@
+samba_user: "frqadmin"
+samba_password: "!frqAdmin"
+samba_share_directory: "src/samba/share"
+samba_group_name: "sambashare"

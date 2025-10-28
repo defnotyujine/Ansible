@@ -6,6 +6,12 @@
       - DNS
     include_management_tools: yes
     state: present
+  register: feature_result
+
+- name: Reboot after feature installation
+  win_reboot:
+    reboot_timeout: 600
+  when: feature_result.changed
 
 - name: Promote server to Domain Controller
   microsoft.ad.domain:
@@ -27,3 +33,4 @@
     dynamic_update: secure
     state: present
   loop: "{{ reverse_zones }}"
+  

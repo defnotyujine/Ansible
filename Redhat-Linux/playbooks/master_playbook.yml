@@ -6,29 +6,31 @@
     - group_vars/group_vars.yml
 
   tasks:
-    - name: Run Preliminaries
-      ansible.builtin.include_tasks: preliminaries/prelims.yml
+    # - name: Run Preliminaries
+    #   ansible.builtin.include_tasks: preliminaries/prelims.yml
 
-    - name: Include Install and Configure Samba
-      include_role:
-        name: samba_server
-
-    - name: Include Install and Configure Httpd Web Server
-      include_role:
-        name: web_server
-    
-    # - name: Include Clamav Configuration
+    # - name: Include Install and Configure Samba
     #   include_role:
-    #     name: clamav
+    #     name: Samba_Install_Configure
+
+    # - name: Include Install and Configure Httpd Web Server
+    #   include_role:
+    #     name: Httpd_Install_Configure
+    
+    # # - name: Include Clamav Configuration
+    # #   include_role:
+    # #     name: clamav
   
     # - name: Include Firewalld Configuration
     #   include_role:
     #     name: firewalld
 
-    # - name: Remove Firewalld Configuration
-    #   include_role:
-    #     name: remove_firewalld
+    # # - name: Remove Firewalld Configuration
+    # #   include_role:
+    # #     name: remove_firewalld
 
-    - name: Include Keycloak Installation
-      include_role:
-        name: keycloak
+- name: Include RHEL 9 Hardening
+  hosts: all
+  gather_facts: false
+  roles:
+    - role: RHEL9-CIS-devel

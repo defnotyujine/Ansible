@@ -1,0 +1,50 @@
+---
+# Micrsofot Windows Server 1 | Primary Domain Controller
+- name: Run Ansible Roles on Target
+  hosts: windows_server1
+  gather_facts: true
+  vars_files:
+    - group_vars/group_vars.yml
+  
+  pre_tasks:
+    - import_tasks: ../playbooks/preliminaries/prelims.yml
+  
+  tasks:
+    - name: VVolf Banner
+      command: cat ../playbooks/templates/banner.txt
+      register: banner_output
+      delegate_to: localhost 
+
+    - name: Print Banner Output
+      debug:
+        msg: "{[ banner_output.stdout_lines ]}"
+        
+    - name: Install AD-Domain-Services and DNS roles
+      include_role:
+        name: ADDS_DNS_setup
+    
+    - name: Create AD OU structure for _ManagedServices
+      include_role:
+        name: OU_structure
+
+    - name: Create users in their respective OUs
+      include_role:
+        name: User_Creation
+    
+    - name: Apply GPO Policy Settings
+      include_role:
+        name: Group_Policy
+
+    - name: Show message that Ansible Deployment has finished
+      community.windows.win_msg:
+        display_seconds: 3600
+        msg: "Ansible Deployment has finished."
+        when: not ansible_check_mode | bool
+        tags:
+          - always
+
+- name: Include Windows Server 2022 Hardening
+  hosts: all
+  gather_facts: false
+  roles:
+    - role: Windows-2022-CIS-devel

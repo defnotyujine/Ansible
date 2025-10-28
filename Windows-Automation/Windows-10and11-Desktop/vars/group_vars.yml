@@ -1,0 +1,30 @@
+partitioning:
+  physical:
+    - number: 0
+      label: LOG
+      drive_letter: D
+      size: -1
+      unit_size: 4096
+    - number: 0
+      label: Data
+      drive_letter: E
+      size: -1
+      unit_size: 4096
+
+  virtual:
+    - number: 1
+      label: LOG
+      drive_letter: D
+      size: -1
+      unit_size: 4096
+    - number: 2
+      label: Data
+      drive_letter: E
+      size: -1
+      unit_size: 4096
+
+env_ansible:
+    temp: "C:\\Temp\\"
+    name: 'FRQ_LOG_ROOT'
+    value: 'd:\\_FRQLOG'
+    folder: 'd:\\_FRQLOG'

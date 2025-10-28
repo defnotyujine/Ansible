@@ -1,0 +1,86 @@
+# Microsoft Windows Server 2 | Secondary Domain Controller
+- name: Setup ADDS/DNS on Server 2
+  hosts: windows_server2
+  gather_facts: true
+  become: true
+  become_method: runas
+  become_user: Administrator
+  vars_files:
+    - group_vars/group_vars.yml
+
+  pre_tasks:
+    - import_tasks: ../playbooks/preliminaries/prelims.yml
+  
+  tasks:
+    - name: VVolf Banner
+      command: cat ../playbooks/templates/banner.txt
+      register: banner_output
+      delegate_to: localhost 
+
+    - name: Print Banner Output
+      debug:
+        msg: "{[ banner_output.stdout_lines ]}"
+        
+    - name: Install AD-Domain-Services and DNS roles
+      win_feature:
+        name:
+          - AD-Domain-Services
+          - DNS
+        include_management_tools: yes
+        state: present
+
+    - name: Join windows_server2 to the {{ dns_domain_name }} domain
+      microsoft.ad.membership:
+        dns_domain_name: "{{ dns_domain_name }}"          
+        domain_admin_user: "{{ domain_admin_user }}@{{ dns_domain_name }}"       
+        domain_admin_password: "{{ domain_admin_password }}"
+        state: domain
+      register: join
+    
+    - name: Reboot after domain join
+      win_reboot:
+        msg: "Rebooting after domain join"
+      when: join is changed or true
+  
+    - name: Wait for server to come back online
+      wait_for_connection:
+        timeout: 600
+
+    - name: Promote to Additional Domain Controller
+      microsoft.ad.domain_controller:
+        dns_domain_name: "{{ dns_domain_name }}"      
+        domain_admin_user: "{{ domain_admin_user }}@{{ dns_domain_name }}"
+        domain_admin_password: "{{ domain_admin_password }}"
+        safe_mode_password: "{{ domain_safe_mode_password }}"
+        state: domain_controller      
+      register: promote
+
+    - name: Reboot after promotion
+      win_reboot:
+      when: promote.reboot_required
+
+    - name: Wait for server to come back online
+      wait_for_connection:
+        timeout: 600
+
+    - name: Run AD replication summary
+      win_command: repadmin /replsummary
+      register: repl_summary
+
+    - name: Show replication summary output
+      debug:
+        var: repl_summary.stdout_lines
+
+    - name: Show message that Ansible Deployment has finished
+      community.windows.win_msg:
+        display_seconds: 3600
+        msg: "Ansible Deployment has finished."
+        when: not ansible_check_mode | bool
+        tags:
+          - always
+
+- name: Include Windows Server 2022 Hardening
+  hosts: all
+  gather_facts: false
+  roles:
+    - role: Windows-2022-CIS-devel

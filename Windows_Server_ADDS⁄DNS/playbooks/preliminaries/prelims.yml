@@ -1,0 +1,57 @@
+- name: Preliminary checks for OS Information
+  block:
+    - name: Gather Windows OS Information
+      ansible.windows.win_shell: |
+        systeminfo | findstr /B /C:"OS Name" /C:"OS Version" /C:"System Type"
+      register: os_info
+
+    - name: Show OS info
+      debug:
+        var: os_info.stdout_lines
+
+    - name: Fail if not Microsoft Windows Server 2022
+      ansible.builtin.fail:
+        msg: "The target system is not running Windows Server 2022. Aborting Playbook!"
+      when: "'Windows Server 2022' not in os_info.stdout"
+
+- name: Preliminary checks for device resources
+  block:
+    - name: Get free physical memory in MB
+      ansible.windows.win_shell: |
+        (Get-CimInstance -ClassName Win32_OperatingSystem).FreePhysicalMemory / 1024
+      register: free_memory
+
+    - name: Show free memory available 
+      debug:
+        var: free_memory.stdout_lines
+
+    - name: Fail if free memory is less than 1024 MB
+      ansible.builtin.fail:
+        msg: "Insufficient memory. At least 1024 MB free is required, but found {{ free_memory.stdout }} MB."
+      when: free_memory.stdout | float < 1024
+
+    - name: Check free disk space on "C:" Drive
+      ansible.windows.win_shell: |
+        (Get-PSDrive -Name C).Free / 1GB
+      register: free_disk_space
+
+    - name: Show free disk space
+      debug:
+        msg: "Free disk space on C: drive is {{ free_disk_space.stdout }} GB"
+
+    - name: Fail if free disk space is less than 20 GB
+      ansible.builtin.fail:
+        msg: "Insufficient disk space on C: drive. At least 20 GB free is required, but found {{ free_disk_space.stdout }} GB."
+      when: free_disk_space.stdout | float < 20
+
+- name: Preliminary checks for device reboot pending
+  block:
+    - name: Check if reboot is pending
+      ansible.windows.win_reg_stat:
+        path: 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired'
+      register: reboot_pending
+
+    - name: Fail if reboot is pending 
+      ansible.builtin.fail:
+        msg: "A reboot is pending on the target machine. Please reboot before continuing."
+      when: reboot_pending.exists

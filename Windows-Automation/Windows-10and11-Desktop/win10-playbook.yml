@@ -3,6 +3,8 @@
 - name: Run Preliminary checks and Application Installation
   hosts: windows
   gather_facts: yes
+  vars_files:
+    - vars/group_vars.yml
   tasks:
 
     - name: Gather Windows facts

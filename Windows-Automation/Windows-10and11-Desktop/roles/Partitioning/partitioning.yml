@@ -1,0 +1,30 @@
+---
+- name: Retrieve disc information
+  community.windows.win_disk_facts:
+
+- name: Abort when the disk number does not exist
+  fail:
+    msg: Disk does not exist
+  when: ansible_disks[disk.number] is undefined
+
+- name: Initialize disk
+  ansible.windows.win_shell: Initialize-Disk -Number '{{ disk.number }}'
+  check_mode: False
+  when: ansible_disks[disk.number].partition_style == 'RAW'
+
+- name: Create a partition with drive letter {{ disk.drive_letter }}
+  community.windows.win_partition:
+    drive_letter: '{{ disk.drive_letter }}'
+    partition_size: '{{ disk.size | default("-1")}}'
+    disk_number: '{{ disk.number }}'
+  register: created_partition
+
+- name: Full format the newly created partition as NTFS and label it with '{{ disk.label }}'
+  community.windows.win_format:
+    drive_letter: '{{ disk.drive_letter }}'
+    file_system: NTFS
+    new_label: '{{ disk.label }}'
+    allocation_unit_size: '{{ disk.unit_size }}'
+  when: created_partition.changed | bool or disk.format_force | default(False) | bool
+
+
