@@ -17,17 +17,17 @@
       include_role:
         name: web_server
     
-    - name: Include Clamav Configuration
-      include_role:
-        name: clamav
+    # - name: Include Clamav Configuration
+    #   include_role:
+    #     name: clamav
   
-    - name: Include Firewalld Configuration
-      include_role:
-        name: firewalld
+    # - name: Include Firewalld Configuration
+    #   include_role:
+    #     name: firewalld
 
-    - name: Remove Firewalld Configuration
-      include_role:
-        name: remove_firewalld
+    # - name: Remove Firewalld Configuration
+    #   include_role:
+    #     name: remove_firewalld
 
     - name: Include Keycloak Installation
       include_role:
