@@ -17,9 +17,9 @@
       include_role:
         name: web_server
     
-    # - name: Include Clamav Configuration
-    #   include_role:
-    #     name: clamav
+    - name: Include Clamav Configuration
+      include_role:
+        name: clamav
   
     - name: Include Firewalld Configuration
       include_role:
