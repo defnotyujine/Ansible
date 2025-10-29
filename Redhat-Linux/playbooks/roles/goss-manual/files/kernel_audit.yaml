@@ -1,0 +1,50 @@
+file:
+  /etc/modprobe.d/blacklist.conf:
+    exists: true
+    contains:
+      - "blacklist cramfs"
+      - "blacklist freevxfs"
+      - "blacklist hfs"
+      - "blacklist hfsplus"
+      - "blacklist jffs2"
+      - "blacklist squashfs"
+      - "blacklist udf"
+      - "blacklist usb-storage"
+
+  /etc/modprobe.d/CIS.conf:
+    exists: true
+    contains:
+      - "install cramfs /bin/true"
+      - "install freevxfs /bin/true"
+      - "install hfs /bin/true"
+      - "install hfsplus /bin/true"
+      - "install jffs2 /bin/true"
+      - "install squashfs /bin/true"
+      - "install udf /bin/true"
+      - "install usb-storage /bin/true"
+
+command:
+  check_cramfs:
+    exec: "lsmod | grep -w cramfs"
+    exit-status: 1
+  check_freevxfs:
+    exec: "lsmod | grep -w freevxfs"
+    exit-status: 1
+  check_hfs:
+    exec: "lsmod | grep -w hfs"
+    exit-status: 1
+  check_hfsplus:
+    exec: "lsmod | grep -w hfsplus"
+    exit-status: 1
+  check_jffs2:
+    exec: "lsmod | grep -w jffs2"
+    exit-status: 1
+  check_squashfs:
+    exec: "lsmod | grep -w squashfs"
+    exit-status: 1
+  check_udf:
+    exec: "lsmod | grep -w udf"
+    exit-status: 1
+  check_usb_storage:
+    exec: "lsmod | grep -w usb_storage"
+    exit-status: 1

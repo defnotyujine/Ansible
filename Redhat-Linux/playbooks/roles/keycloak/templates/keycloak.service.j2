@@ -1,0 +1,15 @@
+[Unit]
+Description=Keycloak Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/keycloak
+ExecStart=/opt/keycloak/bin/kc.sh start-dev
+Environment=KEYCLOAK_ADMIN={{ keycloak_admin_user }}
+Environment=KEYCLOAK_ADMIN_PASSWORD={{ keycloak_admin_password }}
+User=keycloak
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

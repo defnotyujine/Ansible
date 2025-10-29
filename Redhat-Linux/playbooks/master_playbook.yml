@@ -1,5 +1,5 @@
 ---
-- name: Set up Samba File Server on AlmaLinux
+- name: Master Playbook for Redhat Linux Systems
   hosts: all
   become: true
   vars_files:
@@ -29,8 +29,20 @@
     # #   include_role:
     # #     name: remove_firewalld
 
-- name: Include RHEL 9 Hardening
+    # - name: Include Keycloak Installation
+    #   include_role:
+    #     name: keycloak
+
+    # - name: Include Zabbix Server Installation
+    #   include_role:
+    #     name: zabbix
+
+    # - name: Include Section 1 RHEL9 CIS Hardening
+    #   import_role:
+    #     name: hardening
+- name: Include RHEL 9 Hardening and Goss Auditing 
   hosts: all
   gather_facts: false
   roles:
-    - role: RHEL9-CIS-devel
+    # - role: RHEL9-CIS-devel
+    - role: goss

@@ -1,0 +1,5 @@
+---
+goss_version: "0.4.6"
+goss_bin_path: /usr/local/bin/goss
+goss_audit_file: /etc/goss.d/kernel_audit.yaml
+goss_log_dir: /var/log/goss

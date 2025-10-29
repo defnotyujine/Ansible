@@ -1,9 +1,13 @@
 ---
+- name: Refresh DNF cache
+  ansible.builtin.dnf:
+    update_cache: yes
+
 - name: Update all packages
   ansible.builtin.dnf:
     name: '*'
     state: latest
-    update_cache: yes
+  become: yes
 
 - name: Ensure required system packages are installed
   ansible.builtin.dnf:

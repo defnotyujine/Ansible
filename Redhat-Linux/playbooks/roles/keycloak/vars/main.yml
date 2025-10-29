@@ -1,0 +1,4 @@
+keycloak_admin_user: admin
+keycloak_admin_password: admin123
+keycloak_version: 24.0.3
+keycloak_install_dir: /opt/keycloak

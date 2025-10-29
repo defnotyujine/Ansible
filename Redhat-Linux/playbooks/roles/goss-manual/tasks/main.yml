@@ -1,0 +1,50 @@
+---
+- name: Ensure Goss is installed
+  ansible.builtin.get_url:
+    url: "https://github.com/goss-org/goss/releases/download/v{{ goss_version }}/goss-linux-amd64"
+    dest: "{{ goss_bin_path }}"
+    mode: '0755'
+
+- name: Ensure Goss directories exist
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - "{{ goss_audit_file | dirname }}"
+    - "{{ goss_log_dir }}"
+
+- name: Deploy kernel audit Goss file
+  ansible.builtin.copy:
+    src: kernel_audit.yaml
+    dest: "{{ goss_audit_file }}"
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Run Goss audit after hardening
+  ansible.builtin.command:
+    cmd: /usr/local/bin/goss validate --format tap
+  args:
+    chdir: "{{ goss_audit_file | dirname }}"
+  environment:
+    GOSS_FILE: "{{ goss_audit_file }}"
+  register: goss_audit_result
+  ignore_errors: true
+
+- name: Save Goss audit result to log
+  ansible.builtin.copy:
+    dest: "{{ goss_log_dir }}/audit_{{ ansible_date_time.iso8601 }}.log"
+    content: "{{ goss_audit_result.stdout }}"
+
+- name: Display Goss audit summary
+  ansible.builtin.debug:
+    msg: "{{ goss_audit_result.stdout_lines }}"
+
+- name: Retrieve Goss audit logs to control node
+  ansible.builtin.fetch:
+    src: /var/log/goss/audit_*.log
+    dest: ./goss/audit-results/
+    flat: yes

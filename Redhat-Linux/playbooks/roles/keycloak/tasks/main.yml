@@ -1,0 +1,75 @@
+- name: Ensure dependencies for Keycloak are installed
+  ansible.builtin.dnf:
+    name:
+      - java-17-openjdk
+      - java-17-openjdk-devel
+      - wget
+      - curl
+      - tar
+      - firewalld
+    state: present
+
+- name: Ensure firewalld is running
+  ansible.builtin.service:
+    name: firewalld
+    state: started
+    enabled: true
+
+- name: Create Keycloak system user
+  ansible.builtin.user:
+    name: keycloak
+    shell: /sbin/nologin
+    home: "{{ keycloak_install_dir }}"
+    system: yes
+
+- name: Create Keycloak directory
+  ansible.builtin.file:
+    path: "{{ keycloak_install_dir }}"
+    state: directory
+    mode: '0755'
+    owner: keycloak
+    group: keycloak
+
+- name: Download Keycloak {{ keycloak_version }}
+  ansible.builtin.get_url:
+    url: "https://github.com/keycloak/keycloak/releases/download/{{ keycloak_version }}/keycloak-{{ keycloak_version }}.tar.gz"
+    dest: "{{ keycloak_install_dir }}/keycloak.tar.gz"
+
+- name: Extract Keycloak
+  ansible.builtin.unarchive:
+    src: "{{ keycloak_install_dir }}/keycloak.tar.gz"
+    dest: "{{ keycloak_install_dir }}"
+    remote_src: yes
+    extra_opts: [--strip-components=1]
+    owner: keycloak
+    group: keycloak
+
+- name: Remove Keycloak archive
+  ansible.builtin.file:
+    path: "{{ keycloak_install_dir }}/keycloak.tar.gz"
+    state: absent
+
+- name: Open port 8080/tcp in firewalld
+  ansible.builtin.firewalld:
+    port: 8080/tcp
+    permanent: yes
+    state: enabled
+    immediate: yes
+
+- name: Deploy Keycloak systemd unit file
+  ansible.builtin.template:
+    src: keycloak.service.j2
+    dest: /etc/systemd/system/keycloak.service
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Reload systemd to register Keycloak service
+  ansible.builtin.systemd:
+    daemon_reload: yes
+
+- name: Enable and start Keycloak service
+  ansible.builtin.systemd:
+    name: keycloak
+    enabled: yes
+    state: started
