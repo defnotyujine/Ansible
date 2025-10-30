@@ -1,5 +1,5 @@
 ---
-- name: Master Playbook for Redhat Linux Systems
+- name: Master Playbook for Red Hat Linux Systems
   hosts: all
   become: true
   vars_files:
@@ -10,37 +10,38 @@
     #   ansible.builtin.include_tasks: preliminaries/prelims.yml
 
     # - name: Include Install and Configure Samba
-    #   include_role:
+    #   ansible.builtin.include_role:
     #     name: Samba_Install_Configure
 
-    # - name: Include Install and Configure Httpd Web Server
-    #   include_role:
+    # - name: Include Install and Configure HTTPD Web Server
+    #   ansible.builtin.include_role:
     #     name: httpd
-    
-    # # - name: Include Clamav Configuration
-    # #   include_role:
-    # #     name: clamav
-  
+
+    # - name: Include ClamAV Configuration
+    #   ansible.builtin.include_role:
+    #     name: clamav
+
     # - name: Include Firewalld Configuration
-    #   include_role:
+    #   ansible.builtin.include_role:
     #     name: firewalld
 
-    # # - name: Remove Firewalld Configuration
-    # #   include_role:
-    # #     name: remove_firewalld
+    # - name: Remove Firewalld Configuration
+    #   ansible.builtin.include_role:
+    #     name: remove_firewalld
 
     # - name: Include Keycloak Installation
-    #   include_role:
+    #   ansible.builtin.include_role:
     #     name: keycloak
 
     # - name: Include Zabbix Server Installation
-    #   include_role:
+    #   ansible.builtin.include_role:
     #     name: zabbix
 
     # - name: Include Section 1 RHEL9 CIS Hardening
-    #   import_role:
+    #   ansible.builtin.import_role:
     #     name: hardening
-- name: Include RHEL 9 Hardening and Goss Auditing 
+
+- name: Include RHEL 9 Hardening and Goss Auditing
   hosts: all
   gather_facts: false
   roles:
