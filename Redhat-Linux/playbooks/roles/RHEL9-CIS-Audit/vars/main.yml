@@ -1,0 +1,6 @@
+splitter_file_for_goss_wdupes: split-results-wdupes.py
+splitter_file_for_goss_nodupes: split-results-nodupes.py
+rhel9_cis_audit: RHEL9-CIS-Audit
+rhel9_cis_audit_path_and_file: /opt/RHEL9-CIS-Audit/run_audit.sh
+goss_binary_link: https://github.com/goss-org/goss/releases/download/v0.4.4/goss-linux-amd64
+goss_destination_path: /usr/local/bin/goss

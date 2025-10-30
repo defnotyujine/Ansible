@@ -15,7 +15,7 @@
 
     # - name: Include Install and Configure Httpd Web Server
     #   include_role:
-    #     name: Httpd_Install_Configure
+    #     name: httpd
     
     # # - name: Include Clamav Configuration
     # #   include_role:
@@ -45,4 +45,5 @@
   gather_facts: false
   roles:
     # - role: RHEL9-CIS-devel
-    - role: goss
+    - role: RHEL9-CIS-Audit
+    # - role: goss-manual

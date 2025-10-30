@@ -1,0 +1,45 @@
+---
+- name: Copy RHEL9-CIS-Audit folder to /opt/ on target host
+  ansible.builtin.copy:
+    src: RHEL9-CIS-Audit
+    dest: "/opt/"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy Results splitter file for GOSS no dupes
+  ansible.builtin.copy:
+    src: "{{splitter_file_for_goss_nodupes}}"
+    dest: "/opt/{{splitter_file_for_goss_nodupes}}"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Copy Results splitter file for GOSS with dupes
+  ansible.builtin.copy:
+    src: "{{splitter_file_for_goss_wdupes}}"
+    dest: "/opt/{{splitter_file_for_goss_wdupes}}"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Ensure run_audit.sh is executable
+  ansible.builtin.file:
+    path: "{{rhel9_cis_audit_path_and_file}}"
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Ensure Goss binary is installed
+  ansible.builtin.get_url:
+    url: https://github.com/goss-org/goss/releases/download/v0.4.4/goss-linux-amd64
+    dest: "{{goss_destination_path}}"
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Execute run_audit.sh
+  ansible.builtin.command: bash {{rhel9_cis_audit_path_and_file}}
+  args:
+    chdir: "/opt/{{rhel9_cis_audit}}"
+
