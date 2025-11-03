@@ -43,4 +43,3 @@
 #   roles:
 #     # - role: RHEL9-CIS-devel
 #     # - role: RHEL9-CIS-Audit
-#     # - role: goss-manual
