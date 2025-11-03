@@ -6,8 +6,8 @@
     - group_vars/group_vars.yml
 
   tasks:
-    # - name: Run Preliminaries
-    #   ansible.builtin.include_tasks: preliminaries/prelims.yml
+    - name: Run Preliminaries
+      ansible.builtin.include_tasks: preliminaries/prelims.yml
 
     # - name: Include Install and Configure Samba
     #   ansible.builtin.include_role:
@@ -25,10 +25,6 @@
     #   ansible.builtin.include_role:
     #     name: firewalld
 
-    # - name: Remove Firewalld Configuration
-    #   ansible.builtin.include_role:
-    #     name: remove_firewalld
-
     # - name: Include Keycloak Installation
     #   ansible.builtin.include_role:
     #     name: keycloak
@@ -41,10 +37,10 @@
     #   ansible.builtin.import_role:
     #     name: hardening
 
-- name: Include RHEL 9 Hardening and Goss Auditing
-  hosts: all
-  gather_facts: false
-  roles:
-    # - role: RHEL9-CIS-devel
-    - role: RHEL9-CIS-Audit
-    # - role: goss-manual
+# - name: Include RHEL 9 Hardening and Goss Auditing
+#   hosts: all
+#   gather_facts: false
+#   roles:
+#     # - role: RHEL9-CIS-devel
+#     # - role: RHEL9-CIS-Audit
+#     # - role: goss-manual

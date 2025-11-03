@@ -1,11 +1,11 @@
 ---
-# - name: Copy RHEL9-CIS-Audit folder to /opt/ on target host
-#   ansible.builtin.copy:
-#     src: RHEL9-CIS-Audit
-#     dest: "/opt/"
-#     owner: root
-#     group: root
-#     mode: '0755'
+- name: Copy RHEL9-CIS-Audit folder to /opt/ on target host
+  ansible.builtin.copy:
+    src: RHEL9-CIS-Audit
+    dest: "/opt/"
+    owner: root
+    group: root
+    mode: '0755'
 
 - name: Copy Results splitter file for GOSS no dupes
   ansible.builtin.copy:
